@@ -3,7 +3,7 @@
 	<name>WeixinV3</name>
 
 	<js-module src="www/weixin.js" name="weixin">
-		<clobbers target="navigator.weixin" />
+		<clobbers target="Wxpay" />
 	</js-module>
 
 	<!-- ios -->

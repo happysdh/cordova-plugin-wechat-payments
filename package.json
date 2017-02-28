@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "name": "cordova-plugin-wechat-payments",
+  "cordova_name": "wechat payment",
+  "description": "微信支付移动支付Cordova插件",
+  "license": "MIT license",
+  "repo": "https://github.com/ZhichengChen/cordova-plugin-wechat-payments",
+  "issue": "https://github.com/ZhichengChen/cordova-plugin-wechat-payments",
+  "keywords": [
+    "wxpay",
+    "微信支付"
+  ],
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.5.0"
+    }
+  ]
+}
