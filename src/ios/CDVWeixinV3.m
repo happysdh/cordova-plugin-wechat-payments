@@ -31,6 +31,18 @@
     }
 }
 
+-(void) prepareForExec:(NSString *)appid cmd:(CDVInvokedUrlCommand *)command{
+    [WXApi registerApp:appid];
+        self.currentCallbackId = command.callbackId;
+        if (![WXApi isWXAppInstalled])
+        {
+            CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"未安装微信"];
+            [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+            [self endForExec];
+            return;
+        }
+}
+
 -(NSDictionary *)checkArgs:(CDVInvokedUrlCommand *) command{
     // check arguments
     NSDictionary *params = [command.arguments objectAtIndex:0];
@@ -81,6 +93,27 @@
     }
 }
 
+- (void)pay:(CDVInvokedUrlCommand *)command {
+
+    NSDictionary *params = [self checkArgs:command];
+    if(params == nil){
+        return;
+    }
+    NSString *appid = [params objectForKey:@"appid"];
+    [self prepareForExec:appid cmd:command];
+
+    // 调起微信支付
+    PayReq *request     = [[PayReq alloc] init];
+    request.partnerId   = [params objectForKey:@"partnerid"];
+    request.prepayId    = [params objectForKey:@"prepayid"];
+    request.package     = [params objectForKey:@"package"];
+    request.nonceStr    = [params objectForKey:@"noncestr"];
+    request.timeStamp   = [[params objectForKey:@"timestamp"]intValue];
+    request.sign        = [params objectForKey:@"sign"];
+
+    //在支付之前，如果应用没有注册到微信，应该先调用 [WXApi registerApp:appId] 将应用注册到微信
+    [WXApi sendReq:request];
+}
 
 - (void)sendPayReq:(CDVInvokedUrlCommand *)command{
     [self prepareForExec:command];

@@ -1,4 +1,4 @@
-package com.justep.x5.v3.wxapi;
+package com.xunao.udsa.wxapi;
 
 
 import android.app.Activity;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.justep.cordova.Config;
-import com.justep.x5.base.Constants;
+import com.justep.cordova.plugin.weixin.WeixinV3;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -44,19 +44,38 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 	public void onResp(BaseResp resp) {
 		Log.d(TAG, "onPayFinish, errCode = " + resp.errCode);
 		if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-			Intent intent;
-			try {
-				intent = new Intent(this, WXPayEntryActivity.class.getClassLoader().loadClass(Constants.PACKNAME+ "."+ Constants.ACTIVITYCLASSNAME));
-				Bundle bundle=new Bundle();
-				bundle.putInt("weixinPayRespCode",  resp.errCode);
-				bundle.putString("intentType", "com.justep.cordova.plugin.weixin.WeixinV3");
-			    intent.putExtras(bundle);
-			    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			    Log.i(TAG, "startActivity");
-			    startActivity(intent);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+
+			if(WeixinV3.currentCallbackContext != null) {
+				switch (resp.errCode) {
+					case 0:{
+						WeixinV3.currentCallbackContext.success();
+						break;
+					}
+					case -1:
+					case -2:
+					case -3:
+					case -4:
+					case -5:{
+						WeixinV3.currentCallbackContext.error(resp.errCode);
+						break;
+					}
+				}
 			}
+			finish();
+
+//			Intent intent;
+//			try {
+//				intent = new Intent(this, WXPayEntryActivity.class.getClassLoader().loadClass(Constants.PACKNAME+ "."+ Constants.ACTIVITYCLASSNAME));
+//				Bundle bundle=new Bundle();
+//				bundle.putInt("weixinPayRespCode",  resp.errCode);
+//				bundle.putString("intentType", "com.justep.cordova.plugin.weixin.WeixinV3");
+//			    intent.putExtras(bundle);
+//			    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			    Log.i(TAG, "startActivity");
+//			    startActivity(intent);
+//			} catch (ClassNotFoundException e) {
+//				e.printStackTrace();
+//			}
 		}
 	}
 }

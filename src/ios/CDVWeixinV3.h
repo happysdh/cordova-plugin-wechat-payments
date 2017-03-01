@@ -38,5 +38,5 @@ enum  CDVWeixinSharingTypeV3 {
 
 - (void)generatePrepayId:(CDVInvokedUrlCommand *)command;
 - (void)sendPayReq:(CDVInvokedUrlCommand *)command;
-
+- (void)pay:(CDVInvokedUrlCommand *)command;
 @end
